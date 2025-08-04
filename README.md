@@ -1,5 +1,7 @@
 Library Information Management System
+
 Description
+
 This project is a web-based Library Information Management System developed for the Information Management course at UPY. It allows users to browse, filter, and manage a catalog of books through a modern, user-friendly interface. The system features a visually appealing frontend with a purple-based theme and an admin panel for managing book records.
 Technologies used: Python, Flask, MongoDB, HTML, CSS, JavaScript.
 
