@@ -7,37 +7,98 @@
 </head>
 <body>
   <header>
-    <h1>📚 Biblioteca</h1>
+    <h1>Biblioteca</h1>
     <nav>
-      <ul>
-        {% for category in categories %}
-        <li><a href="#" onclick="loadBooks('{{ category }}')">{{ category.upper() }}</a></li>
-        {% endfor %}
-      </ul>
+      <a href="/">Inicio</a>
+      <a href="/admin">Panel Admin</a>
     </nav>
   </header>
 
-  <main>
-    <div id="book-list"></div>
-  </main>
+  <div class="main-content">
+    <div class="section-title">Catálogo de Libros</div>
+    <div class="filter-bar">
+      <button class="filter-pill" onclick="loadBooks('')">Todos</button>
+      {% for category in categories %}
+        <button class="filter-pill" onclick="loadBooks('{{ category }}')">{{ category.upper() }}</button>
+      {% endfor %}
+    </div>
+    <div id="book-list" class="book-grid"></div>
+  </div>
 
   <script>
-    async function loadBooks(language) {
-      const res = await fetch(`/books?language=${language}`);
-      const books = await res.json();
-      const container = document.getElementById('book-list');
-      container.innerHTML = "";
-      books.forEach(book => {
-        container.innerHTML += `
-          <div class="book-card">
-            <h3>${book.title}</h3>
-            <p>Autor: ${book.authors}</p>
-            <p>Editorial: ${book.publisher}</p>
-            <p>Páginas: ${book.num_pages}</p>
-          </div>
-        `;
-      });
+    let isLoading = false;
+
+    // Highlight selected filter
+    function setActiveFilter(language) {
+      try {
+        document.querySelectorAll('.filter-pill').forEach(btn => {
+          btn.classList.remove('selected');
+          if ((language === '' && btn.textContent === 'TODOS') || btn.textContent === language.toUpperCase()) {
+            btn.classList.add('selected');
+          }
+        });
+      } catch (error) {
+        console.error('Error setting active filter:', error);
+      }
     }
+
+    async function loadBooks(language = '') {
+      if (isLoading) return; // Prevent multiple simultaneous requests
+      isLoading = true;
+      
+      try {
+        setActiveFilter(language);
+        const url = language ? `/books?language=${encodeURIComponent(language)}` : '/books';
+        const res = await fetch(url);
+        
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        
+        const books = await res.json();
+        const container = document.getElementById('book-list');
+        
+        if (!container) {
+          throw new Error('Book list container not found');
+        }
+        
+        container.innerHTML = "";
+        
+        if (!books || books.length === 0) {
+          container.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:#aaa;">No hay libros en esta categoría.</div>';
+          return;
+        }
+        
+        // Build HTML string instead of repeatedly modifying innerHTML
+        let html = '';
+        books.forEach(book => {
+          html += `
+            <div class="book-card">
+              <div class="book-title">${book.title || 'Sin título'}</div>
+              <div class="book-meta">Autor: ${book.authors || 'Desconocido'}</div>
+              <div class="book-meta">Editorial: ${book.publisher || 'Sin editorial'}</div>
+              <div class="book-meta">Páginas: ${book.num_pages || 'N/A'}</div>
+              <div class="book-meta">Idioma: ${book.language_code || 'N/A'}</div>
+            </div>
+          `;
+        });
+        container.innerHTML = html;
+        
+      } catch (error) {
+        console.error('Error loading books:', error);
+        const container = document.getElementById('book-list');
+        if (container) {
+          container.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:#f44;">Error cargando libros. Revisa la consola.</div>';
+        }
+      } finally {
+        isLoading = false;
+      }
+    }
+
+    // Load all books on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadBooks('');
+    });
   </script>
 </body>
 </html>

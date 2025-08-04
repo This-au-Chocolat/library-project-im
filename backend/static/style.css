@@ -1,0 +1,205 @@
+/*
+Purple-based Library Project Theme
+*/
+:root {
+  --primary: #6C3FC5;
+  --primary-light: #B39DDB;
+  --primary-bg: #EDE7F6;
+  --accent: #F06292;
+  --text: #2D2D2D;
+  --bg: #F5F5F5;
+  --white: #fff;
+}
+
+body {
+  font-family: 'Inter', 'Roboto', 'Open Sans', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background: var(--primary);
+  color: var(--white);
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(108,63,197,0.08);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+  letter-spacing: 1px;
+}
+
+nav a {
+  color: var(--white);
+  text-decoration: none;
+  margin-left: 2rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+nav a:hover {
+  color: var(--accent);
+}
+
+.main-content {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(108,63,197,0.07);
+}
+
+.section-title {
+  color: var(--primary);
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.book-card {
+  background: var(--primary-bg);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(108,63,197,0.05);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: box-shadow 0.2s;
+}
+.book-card:hover {
+  box-shadow: 0 6px 24px rgba(108,63,197,0.15);
+}
+.book-title {
+  color: var(--primary);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.book-meta {
+  color: var(--text);
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.button, button {
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background 0.2s;
+}
+.button.accent, button.accent {
+  background: var(--accent);
+}
+.button:disabled, button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+.button:hover, button:hover {
+  background: #512da8;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+.filter-pill {
+  background: var(--primary-light);
+  color: var(--primary);
+  border: none;
+  border-radius: 999px;
+  padding: 0.4rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+  transition: background 0.2s, color 0.2s;
+}
+.filter-pill.selected, .filter-pill:hover {
+  background: var(--primary);
+  color: var(--white);
+}
+
+footer {
+  background: var(--primary);
+  color: var(--white);
+  text-align: center;
+  padding: 1rem 0;
+  margin-top: 3rem;
+  border-radius: 0 0 16px 16px;
+}
+
+/* Admin Table */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+}
+.admin-table th, .admin-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--primary-light);
+  text-align: left;
+}
+.admin-table th {
+  background: var(--primary-bg);
+  color: var(--primary);
+  font-weight: 700;
+}
+.admin-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Toasts & Feedback */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--accent);
+  color: var(--white);
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(240,98,146,0.15);
+  z-index: 2000;
+  font-size: 1rem;
+  opacity: 0.95;
+  display: none;
+}
+.toast.show {
+  display: block;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .main-content {
+    padding: 1rem;
+  }
+  .book-grid {
+    grid-template-columns: 1fr;
+  }
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}

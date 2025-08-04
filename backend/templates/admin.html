@@ -7,46 +7,73 @@
 </head>
 <body>
   <header>
-    <h1>Panel Administrativo 📘</h1>
+    <h1>Panel Administrativo</h1>
+    <nav>
+      <a href="/">Inicio</a>
+      <a href="/admin">Panel Admin</a>
+    </nav>
   </header>
 
-  <main>
-    <h2>📗 Añadir nuevo libro</h2>
-    <form id="add-form">
+  <div class="main-content">
+    <div class="section-title">Añadir nuevo libro</div>
+    <form id="add-form" style="display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:2rem;">
       <input type="text" name="title" placeholder="Título" required>
       <input type="text" name="authors" placeholder="Autor" required>
       <input type="text" name="publisher" placeholder="Editorial" required>
       <input type="number" name="num_pages" placeholder="Páginas" required>
       <input type="text" name="language_code" placeholder="Idioma (ej. eng)" required>
-      <button type="submit">Agregar</button>
+      <button type="submit" class="button">Agregar</button>
     </form>
 
-    <h2>📕 Libros actuales</h2>
-    <ul id="book-list">
-      {% for book in books %}
-        <li>
-          <strong>{{ book.title }}</strong> ({{ book.language_code }}) - 
-          <button onclick="deleteBook('{{ book._id }}')">Eliminar</button>
-        </li>
-      {% endfor %}
-    </ul>
-  </main>
-
+    <div class="section-title">Libros actuales</div>
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Autor</th>
+          <th>Editorial</th>
+          <th>Páginas</th>
+          <th>Idioma</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="book-list">
+        {% for book in books %}
+        <tr>
+          <td>{{ book.title }}</td>
+          <td>{{ book.authors }}</td>
+          <td>{{ book.publisher }}</td>
+          <td>{{ book.num_pages }}</td>
+          <td>{{ book.language_code }}</td>
+          <td>
+            <button class="button accent" onclick="deleteBook('{{ book._id }}')">Eliminar</button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div id="toast" class="toast"></div>
+  </div>
   <script>
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
     document.getElementById("add-form").addEventListener("submit", async function(e) {
       e.preventDefault();
       const data = Object.fromEntries(new FormData(this));
       data["_id"] = Math.random().toString(36).substr(2, 8);  // ID aleatorio
-
       const res = await fetch('/admin/add', {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(data)
       });
-
       if (res.ok) {
-        alert("Libro agregado");
-        location.reload();
+        showToast("Libro agregado");
+        setTimeout(() => location.reload(), 1200);
       }
     });
 
@@ -54,9 +81,11 @@
       if (!confirm("¿Eliminar este libro?")) return;
       const res = await fetch(`/admin/delete/${id}`, { method: "DELETE" });
       if (res.ok) {
-        alert("Eliminado");
-        location.reload();
+        showToast("Eliminado");
+        setTimeout(() => location.reload(), 1200);
       }
+    }
+  </script>
     }
   </script>
 </body>
