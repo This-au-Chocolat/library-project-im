@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Library Catalog</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <h1>📚 Biblioteca</h1>
+    <nav>
+      <ul>
+        {% for category in categories %}
+        <li><a href="#" onclick="loadBooks('{{ category }}')">{{ category.upper() }}</a></li>
+        {% endfor %}
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div id="book-list"></div>
+  </main>
+
+  <script>
+    async function loadBooks(language) {
+      const res = await fetch(`/books?language=${language}`);
+      const books = await res.json();
+      const container = document.getElementById('book-list');
+      container.innerHTML = "";
+      books.forEach(book => {
+        container.innerHTML += `
+          <div class="book-card">
+            <h3>${book.title}</h3>
+            <p>Autor: ${book.authors}</p>
+            <p>Editorial: ${book.publisher}</p>
+            <p>Páginas: ${book.num_pages}</p>
+          </div>
+        `;
+      });
+    }
+  </script>
+</body>
+</html>
